@@ -170,24 +170,19 @@ function owner(){return (window.claude&&claude.use)?claude.use("user").then(func
 $("lg").onclick=function(){
  if(admin){admin=false;try{sessionStorage.removeItem("ksm_a")}catch(e){}setLg();render();
 try{if(sessionStorage.getItem("ksm_a")==="1")owner().then(function(ok){if(ok){admin=true;setLg();render()}})}catch(e){}return}
- var w=document.createElement("div");w.appendChild(h("h3","","MANUS LOGIN"));
- w.appendChild(h("p","dt","Manusアカウントにサインインしてください。サインイン画面を閉じると、自動的にお知らせ投稿ページへ移動します。"));
- var a=h("button","btn","Manusにサインイン");a.onclick=function(){
-  var pop=window.open("https://manus.im/login","manusLogin","popup,width=480,height=720");
-  if(!pop){m.textContent="ポップアップがブロックされています。ブラウザでポップアップを許可してください。";return}
-  m.textContent="Manusでのサインイン完了を待機中…";
-  var started=Date.now();
-  var timer=setInterval(function(){
-   if(pop.closed){
-    clearInterval(timer);admin=true;
-    try{sessionStorage.setItem("ksm_a","1")}catch(e){}
-    closeM();setLg();render();go("news");
-   }else if(Date.now()-started>15*60*1000){
-    clearInterval(timer);m.textContent="サインインの待機時間が終了しました。もう一度お試しください。";
-   }
-  },500);
- };w.appendChild(a);
- var m=h("p","dt","");w.appendChild(m);openM(w);
+ var w=document.createElement("div");w.appendChild(h("h3","","BASIC AUTH"));
+ w.appendChild(h("p","dt","お知らせ投稿ページに入るには、認証情報を入力してください。"));
+ var uid=document.createElement("input");uid.type="text";uid.placeholder="ID";uid.autocomplete="username";w.appendChild(uid);
+ var pw=document.createElement("input");pw.type="password";pw.placeholder="パスワード";pw.autocomplete="current-password";w.appendChild(pw);
+ var m=h("p","dt","");
+ var b=h("button","btn","ログイン");b.onclick=function(){
+  if(uid.value==="ksm2026"&&pw.value==="ksm712t9258"){
+   admin=true;try{sessionStorage.setItem("ksm_a","1")}catch(e){}
+   closeM();setLg();render();go("news");
+  }else{m.textContent="IDまたはパスワードが正しくありません。"}
+ };
+ pw.onkeydown=function(e){if(e.key==="Enter")b.click()};
+ w.appendChild(b);w.appendChild(m);openM(w);
 };
 $("cs").onclick=function(){
  var n=$("cn").value.trim(),e=$("ce").value.trim(),m=$("cm").value.trim(),r=$("cr");
